@@ -3,8 +3,8 @@
  */
 module.exports = {
   siteMetadata: {
-    title: `boydquintcalc`,
-    siteUrl: `https://www.yourdomain.tld`,
+    title: 'boydquintcalc',
+    siteUrl: 'https://www.yourdomain.tld'
   },
-  plugins: [],
+  plugins: []
 }
