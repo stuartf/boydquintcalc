@@ -6,5 +6,6 @@ module.exports = {
     title: 'boydquintcalc',
     siteUrl: 'https://www.yourdomain.tld'
   },
-  plugins: []
+  plugins: [],
+  pathPrefix: '/boydquintcalc'
 }
