@@ -93,9 +93,9 @@ const IndexPage = () => {
           <MenuItem value="black">Black</MenuItem>
         </Select>
         <Stack direction="row" spacing={1}>
-          <Typography sx={{p: 1}}>Male</Typography>
+          <Typography sx={{py: 1}}>Male</Typography>
           <Switch checked={isFemale} onChange={() => {setIsFemale((state) => !state)}} />
-          <Typography sx={{p: 1}}>Female</Typography>
+          <Typography sx={{py: 1}}>Female</Typography>
         </Stack>
         <TextField label="Name" id="name" margin="normal" value={name} onChange={(event) => {setName(event.target.value)}} />
         <Button variant="contained" sx={{m: 3}} onClick={addPlayer}>Add</Button>
