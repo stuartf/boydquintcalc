@@ -4,8 +4,8 @@
 module.exports = {
   siteMetadata: {
     title: 'boydquintcalc',
-    siteUrl: 'https://www.yourdomain.tld'
+    siteUrl: 'https://stuartf.github.io/boydquintcalc'
   },
-  plugins: [],
+  plugins: ['gatsby-theme-material-ui'],
   pathPrefix: '/boydquintcalc'
 }
