@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Container';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Paper from '@mui/material/Paper';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
@@ -25,6 +26,7 @@ const IndexPage = () => {
   const [isFemale, setIsFemale] = useState(false);
   const [teamSize, setTeamSize] = useState(5);
   const [suggestedMax, setSuggestedMax] = useState();
+  const [teams, setTeams] = useState([]);
 
   const beltPoints = {
     white: 0,
@@ -79,6 +81,20 @@ const IndexPage = () => {
 
   const formatNumber = (num) => parseInt(num.replace(/\D*/g, ''), 10) || '';
 
+  const snakeDraftTeams = (count) => {
+    const numTeams = Math.ceil(players.length / count);
+    const myTeams = new Array(numTeams);
+    let pass = 0;
+    for(let i=0; i < players.length; i++) {
+      if (i%numTeams === 0) {
+        pass++;
+      }
+      const turn = pass%2 === 0 ? numTeams - i%numTeams-1 : i%numTeams;
+      myTeams[turn].push(players[i]);
+    }
+    setTeams(myTeams);
+  };
+
   return (
     <>
     <Container maxWidth="sm">
@@ -109,8 +125,11 @@ const IndexPage = () => {
                 <TableCell>
                   {player.name}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {player.points}
+                </TableCell>
+                <TableCell align="right">
+                  <Button onClick={() => {setPlayers(players.toSpliced(idx, 1))}}><DeleteIcon/></Button>
                 </TableCell>
               </TableRow>
             ))}
