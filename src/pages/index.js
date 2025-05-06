@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Container';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
 import Paper from '@mui/material/Paper';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
@@ -16,6 +15,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import Player from '../components/player.js';
 
 const IndexPage = () => {
   const [belt, setBelt] = useState("white");
@@ -34,7 +34,7 @@ const IndexPage = () => {
     purple: 40,
     brown: 60,
     black: 80
-  }
+  };
 
   const beltColors = {
     white: '#808080',
@@ -42,7 +42,7 @@ const IndexPage = () => {
     purple: '#8866dd',
     brown: '#a0522d',
     black: '#000000'
-  }
+  };
 
   const addPlayer = () => {
     const player = {
@@ -51,16 +51,16 @@ const IndexPage = () => {
       points: Math.round((isFemale ? weight * 0.75 : weight) + beltPoints[belt] + ((-2 * age) + 160))
     }
     setPlayers((p) => {
-      const updated = [...p, player]
-      updated.sort((a, b) => b.points - a.points)
-      return updated
-    })
-    setAge("")
-    setName("")
-    setIsFemale(false)
-    setWeight("")
-    setBelt('white')
-  }
+      const updated = [...p, player];
+      updated.sort((a, b) => b.points - a.points);
+      return updated;
+    });
+    setAge("");
+    setName("");
+    setIsFemale(false);
+    setWeight("");
+    setBelt('white');
+  };
 
   useEffect(() => {
     if (players.length > 0) {
@@ -81,9 +81,9 @@ const IndexPage = () => {
 
   const formatNumber = (num) => parseInt(num.replace(/\D*/g, ''), 10) || '';
 
-  const snakeDraftTeams = (count) => {
-    const numTeams = Math.ceil(players.length / count);
-    const myTeams = new Array(numTeams);
+  const snakeDraftTeams = () => {
+    const numTeams = Math.ceil(players.length / teamSize);
+    const myTeams = Array.from({length: numTeams}, () => []);
     let pass = 0;
     for(let i=0; i < players.length; i++) {
       if (i%numTeams === 0) {
@@ -99,40 +99,30 @@ const IndexPage = () => {
     <>
     <Container maxWidth="sm">
       <Box sx={{p: 4}} component="form" noValidate autoComplete="off">
-        <TextField label="Weight" id="weight" margin="normal" value={weight} onChange={(event) => {setWeight(formatNumber(event.target.value))}}/>
-        <TextField label="Age" id="age" value={age} margin="normal" onChange={(event) => {setAge(formatNumber(event.target.value))}} />
-        <Select label="Belt" id="belt" value={belt} margin="normal" onChange={(event) => {setBelt(event.target.value)}}>
-          <MenuItem value="white">White</MenuItem>
-          <MenuItem value="blue">Blue</MenuItem>
-          <MenuItem value="purple">Purple</MenuItem>
-          <MenuItem value="brown">Brown</MenuItem>
-          <MenuItem value="black">Black</MenuItem>
-        </Select>
-        <Stack direction="row" spacing={1}>
-          <Typography sx={{py: 1}}>Male</Typography>
-          <Switch checked={isFemale} onChange={() => {setIsFemale((state) => !state)}} />
-          <Typography sx={{py: 1}}>Female</Typography>
+        <Stack>
+          <TextField label="Weight" id="weight" margin="normal" value={weight} onChange={(event) => {setWeight(formatNumber(event.target.value))}}/>
+          <TextField label="Age" id="age" value={age} margin="normal" onChange={(event) => {setAge(formatNumber(event.target.value))}} />
+          <Select label="Belt" id="belt" value={belt} margin="normal" onChange={(event) => {setBelt(event.target.value)}}>
+            <MenuItem value="white">White</MenuItem>
+            <MenuItem value="blue">Blue</MenuItem>
+            <MenuItem value="purple">Purple</MenuItem>
+            <MenuItem value="brown">Brown</MenuItem>
+            <MenuItem value="black">Black</MenuItem>
+          </Select>
+          <Stack direction="row" spacing={1}>
+            <Typography sx={{py: 1}}>Male</Typography>
+            <Switch checked={isFemale} onChange={() => {setIsFemale((state) => !state)}} />
+            <Typography sx={{py: 1}}>Female</Typography>
         </Stack>
         <TextField label="Name" id="name" margin="normal" value={name} onChange={(event) => {setName(event.target.value)}} />
         <Button variant="contained" sx={{m: 3}} onClick={addPlayer}>Add</Button>
+        </Stack>
       </Box>
       <Box sx={{p: 4}}>
         <TableContainer component={Paper}>
           <Table>
             <TableBody>
-            {players.map((player, idx) => (
-              <TableRow key={idx}>
-                <TableCell>
-                  {player.name}
-                </TableCell>
-                <TableCell align="center">
-                  {player.points}
-                </TableCell>
-                <TableCell align="right">
-                  <Button onClick={() => {setPlayers(players.toSpliced(idx, 1))}}><DeleteIcon/></Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {players.map((player, idx) => <Player key={idx} player={player} onDelete={() => setPlayers(players.toSpliced(idx, 1))} />)}
             </TableBody>
           </Table>
         </TableContainer>
@@ -140,9 +130,29 @@ const IndexPage = () => {
       </Box>
       <TextField label="Team Size" id="teamsize" value={teamSize} margin="normal" onChange={(event) => {setTeamSize(formatNumber(event.target.value))}} />
       {suggestedMax ? <Typography>Suggested Team Maximum: {suggestedMax}</Typography> : null}
+      <Button variant="contained" onClick={snakeDraftTeams}>Auto Draft Teams</Button>
+      {teams.map((team, idx) => (
+        <TableContainer component={Paper} key={idx} sx={{m: 4}}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell></TableCell>
+                <TableCell align="center">
+                  <Typography>
+                    {team.reduce((acc, cur) => acc + cur.points, 0)}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {team.map((player, idx) => <Player key={idx} player={player} />)}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ))}
     </Container>
     </>
   )
 }
 
-export default IndexPage
+export default IndexPage;
