@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Container';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -44,8 +46,8 @@ const IndexPage = () => {
     black: '#000000'
   };
 
-  const addPlayer = () => {
-    const player = {
+  const addPlayer = (player) => {
+    player = player || {
       name,
       belt: beltColors[belt],
       points: Math.round((isFemale ? weight * 0.75 : weight) + beltPoints[belt] + ((-2 * age) + 160))
@@ -64,7 +66,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     if (players.length > 0) {
-      setSuggestedMax(players.reduce((acc, player) => acc + player.points, 0)/players.length * teamSize);
+      setSuggestedMax(Math.floor(players.reduce((acc, player) => acc + player.points, 0)/players.length * teamSize));
     }
   }, [players, teamSize]);
 
@@ -95,6 +97,18 @@ const IndexPage = () => {
     setTeams(myTeams);
   };
 
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
+
   return (
     <>
     <Container maxWidth="sm">
@@ -116,6 +130,33 @@ const IndexPage = () => {
         </Stack>
         <TextField label="Name" id="name" margin="normal" value={name} onChange={(event) => {setName(event.target.value)}} />
         <Button variant="contained" sx={{m: 3}} onClick={addPlayer}>Add</Button>
+        <Button
+        component="label"
+        role={undefined}
+        variant="contained"
+        tabIndex={-1}
+        startIcon={<CloudUploadIcon />}
+      >
+          Import Players
+        <VisuallyHiddenInput
+        type="file"
+        onChange={(event) => {
+          const file = event.target.files[0];
+          const reader = new FileReader();
+          reader.onload = () => {
+            reader.result.split("\n")
+            .map(line => {
+              if (line.length >= 3) {
+                const [name, belt, points] = line.split(",");
+                addPlayer({name, belt, points: formatNumber(points)});
+              }
+            })
+          };
+          reader.readAsText(file)
+        }}
+        accept="text/csv"
+      />
+    </Button>
         </Stack>
       </Box>
       <Box sx={{p: 4}}>
