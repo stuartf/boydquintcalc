@@ -68,6 +68,9 @@ const IndexPage = () => {
     if (players.length > 0) {
       setSuggestedMax(Math.floor(players.reduce((acc, player) => acc + player.points, 0)/players.length * teamSize));
     }
+    else {
+      setSuggestedMax(undefined);
+    }
   }, [players, teamSize]);
 
   useEffect(() => {
@@ -170,7 +173,7 @@ const IndexPage = () => {
         {players.length > 0 ? <Button variant="contained" sx={{m: 3}} onClick={() => setPlayers([])}>Clear All</Button> : null}
       </Box>
       <TextField label="Team Size" id="teamsize" value={teamSize} margin="normal" onChange={(event) => {setTeamSize(formatNumber(event.target.value))}} />
-      {suggestedMax ? <Typography>Suggested Team Maximum: {suggestedMax}</Typography> : null}
+      {suggestedMax ? <Typography>Suggested Team Maximum: {suggestedMax}</Typography> : <Typography />}
       <Button variant="contained" onClick={snakeDraftTeams}>Auto Draft Teams</Button>
       {teams.map((team, idx) => (
         <TableContainer component={Paper} key={idx} sx={{m: 4}}>
