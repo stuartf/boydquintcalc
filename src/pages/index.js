@@ -132,7 +132,7 @@ const IndexPage = () => {
             <Typography sx={{py: 1}}>Female</Typography>
         </Stack>
         <TextField label="Name" id="name" margin="normal" value={name} onChange={(event) => {setName(event.target.value)}} />
-        <Button variant="contained" sx={{m: 3}} onClick={addPlayer}>Add</Button>
+        <Button variant="contained" sx={{m: 3}} onClick={() => {addPlayer()}}>Add</Button>
         <Button
         component="label"
         role={undefined}
