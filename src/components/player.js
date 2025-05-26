@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 
 const Player = ({player, onDelete}) => {
   return <TableRow>
-    <TableCell>
+    <TableCell sx={{minWidth: 250}}>
       <Stack direction="row">
         <SquareIcon sx={{color: player.belt, mx: 1}}/>
         <Typography>{player.name}</Typography>
@@ -20,10 +20,10 @@ const Player = ({player, onDelete}) => {
       <Typography>{player.points}</Typography>
     </TableCell>
     {onDelete ? <>
-        <TableCell>
+        <TableCell align="center" size="small" padding="none">
           <Button onClick={() => navigator.clipboard.writeText(`${player.name},${player.belt},${player.points}`)}><ContentCopyIcon/></Button>
         </TableCell>
-        <TableCell align="right">
+        <TableCell align="right" size="small" padding="none">
           <Button onClick={onDelete}><DeleteIcon/></Button>
         </TableCell>
       </> : null}

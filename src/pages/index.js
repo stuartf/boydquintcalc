@@ -126,7 +126,7 @@ const IndexPage = () => {
             <MenuItem value="brown">Brown</MenuItem>
             <MenuItem value="black">Black</MenuItem>
           </Select>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{my: 1}}>
             <Typography sx={{py: 1}}>Male</Typography>
             <Switch checked={isFemale} onChange={() => {setIsFemale((state) => !state)}} />
             <Typography sx={{py: 1}}>Female</Typography>
@@ -139,6 +139,7 @@ const IndexPage = () => {
         variant="contained"
         tabIndex={-1}
         startIcon={<CloudUploadIcon />}
+        sx={{mx: 3}}
       >
           Import Players
         <VisuallyHiddenInput
